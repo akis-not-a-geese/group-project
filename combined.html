@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人自我介紹網站</title>
+    <style>
+        :root {
+            --bg-home: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-works: linear-gradient(135deg, #f093fb 0%, #f8e71c 100%);
+            --bg-contact: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --nav-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --text-primary: #333;
+            --text-on-gradient: white;
+            --btn-bg: #007BFF;
+            --btn-hover: #0056b3;
+            --btn-text: white;
+            --backtop-bg: #007BFF;
+            --backtop-hover: #0056b3;
+            --scroll-indicator: white;
+            --form-bg: rgba(255, 255, 255, 0.95);
+            --form-border: #ddd;
+            --form-label: #333;
+            --body-bg: #f5f5f5;
+            --body-text: #333;
+        }
+
+        [data-theme="dark"] {
+            --bg-home: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --bg-works: linear-gradient(135deg, #2d1b3d 0%, #3d2e00 100%);
+            --bg-contact: linear-gradient(135deg, #0d2b1e 0%, #0a3d35 100%);
+            --nav-bg: rgba(20, 20, 30, 0.95);
+            --nav-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            --text-primary: #e0e0e0;
+            --text-on-gradient: #f0f0f0;
+            --btn-bg: #4da3ff;
+            --btn-hover: #7ab8ff;
+            --btn-text: #1a1a2e;
+            --backtop-bg: #4da3ff;
+            --backtop-hover: #7ab8ff;
+            --scroll-indicator: #e0e0e0;
+            --form-bg: rgba(30, 30, 40, 0.92);
+            --form-border: #444;
+            --form-label: #f0f0f0;
+            --body-bg: #111;
+            --body-text: #e5e5e5;
+        }
+
+        /* 基礎全域樣式優化 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            scroll-behavior: smooth;
+            background-color: var(--body-bg);
+            color: var(--body-text);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* 導覽列：保留毛玻璃質感與動畫 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: var(--nav-shadow);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 18px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+        }
+
+        #themeToggle {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        /* 區塊標準化：自適應內容高度，避免內容溢出 */
+        .page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 60px 20px;
+            text-align: center;
+            color: var(--text-on-gradient);
+            transition: background 0.5s ease, color 0.3s ease;
+        }
+
+        /* 精美漸層背景 */
+        #home {
+            background: var(--bg-home);
+        }
+
+        #works {
+            background: var(--bg-works);
+            color: #333;
+        }
+
+        #contact {
+            background: var(--bg-contact);
+            color: #333;
+        }
+
+        [data-theme="dark"] #works,
+        [data-theme="dark"] #contact {
+            color: var(--text-on-gradient);
+        }
+
+        :root {
+            --input-bg: rgba(255, 255, 255, 0.92);
+            --input-text: #333;
+            --input-border: #ddd;
+        }
+
+        [data-theme="dark"] {
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --input-text: #e5e5e5;
+            --input-border: #444;
+        }
+
+        .page h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .page p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* 下滑指示器動畫 */
+        .scroll-indicator {
+            animation: bounce 2s ease-in-out infinite;
+            margin-top: 20px;
+            font-size: 24px;
+            color: var(--scroll-indicator);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+
+
+        /* 聯絡表單容器優化：融入整體視覺 */
+        .form-container {
+            width: 100%;
+            max-width: 550px;
+            margin: 20px auto 0 auto;
+            padding: 2.5rem;
+            background-color: var(--form-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--form-label);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--btn-bg);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--btn-hover);
+        }
+
+        /* 返回頂部按鈕 */
+        .back-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--backtop-bg);
+            color: var(--btn-text);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 900;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 統一導覽列（採用錨點平滑滾動） -->
+    <nav>
+        <a href="#home">首頁</a>
+        <a href="#works">作品集</a>
+        <a href="#contact">聯絡我</a>
+        <button id="themeToggle" aria-label="切換深色模式">
+            <span id="themeIcon">🌙</span>
+            <span id="themeText">Dark</span>
+        </button>
+    </nav>
+
+    <!-- 首頁區塊 -->
+    <section id="home" class="page">
+        <h1>自我介紹</h1>
+        <p>歡迎來到我的個人網站！這裡整合了我的個人簡介、精選作品以及聯絡方式。讓我們一起探索更多可能。</p>
+
+        <div class="form-container">
+            <form id="homeForm" onsubmit="handleHomeFormSubmit(event)">
+                <div class="form-group">
+                    <label for="homeName">名字：</label>
+                    <input type="text" id="homeName" placeholder="請輸入你的名字" required>
+                </div>
+                <div class="form-group">
+                    <label for="homeIntro">自我介紹：</label>
+                    <textarea id="homeIntro" placeholder="請輸入一簡單的自我介紹" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">確認上傳</button>
+                <div id="homeMessage" class="message" style="display:none;"></div>
+            </form>
+        </div>
+
+        <div class="scroll-indicator">↓</div>
+    </section>
+
+    <!-- 作品區塊 -->
+    <section id="works" class="page">
+        <h1>我們的作品 & 專案</h1>
+        <p>這裡展示了我們精心打造的創意專案與創新解決方案，展現我們在網頁設計與開發上的熱情與專業實力。</p>
+        <div class="scroll-indicator">↓</div>
+    </section>
+
+    <!-- 聯絡我區塊（完美整合原表單） -->
+    <section id="contact" class="page">
+        <h1>Get In Touch / 聯絡我</h1>
+        <p>歡迎填寫下方表單與我取得聯繫，不論是合作洽談還是意見交流，我都會盡快回覆您！</p>
+        
+        <div class="form-container">
+            <form id="contactForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label for="name">姓名：</label>
+                    <input type="text" id="name" placeholder="請輸入你的姓名" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">電子郵件：</label>
+                    <input type="email" id="email" placeholder="請輸入你的電子郵件" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">留言內容：</label>
+                    <textarea id="message" placeholder="請輸入你想對我說的話..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">送出訊息</button>
+            </form>
+        </div>
+
+        <!-- 返回頂部按鈕 -->
+        <button id="backToHome" class="back-top">↑</button>
+    </section>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const html = document.documentElement;
+
+        function getInitialTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+            }
+        }
+
+        applyTheme(getInitialTheme());
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        const backToTop = document.getElementById('backToHome');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            document.getElementById('home').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                applyTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            alert(`謝謝你的留言，${name}！訊息已成功模擬送出。`);
+            document.getElementById('contactForm').reset();
+        }
+
+        function handleHomeFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('homeName').value.trim();
+            const intro = document.getElementById('homeIntro').value.trim();
+            const messageEl = document.getElementById('homeMessage');
+
+            if (name && intro) {
+                messageEl.className = 'message success';
+                messageEl.textContent = '上傳成功！';
+            } else {
+                messageEl.className = 'message error';
+                messageEl.textContent = '請填寫完所有欄位';
+            }
+
+            messageEl.style.display = 'block';
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>
