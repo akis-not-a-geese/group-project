@@ -125,6 +125,14 @@
         /* 精美漸層背景 */
         #home {
             background: var(--bg-home);
+            position: relative;
+        }
+
+        #home .scroll-indicator {
+            position: absolute;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
         }
 
         #works {
@@ -159,6 +167,58 @@
             margin-bottom: 20px;
         }
 
+        .title-prefix {
+            display: none;
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.8;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+
+        /* Avatar (hidden until submit) */
+        .avatar-container {
+            display: none;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .avatar {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid rgba(255,255,255,0.12);
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .avatar-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.45);
+            color: white;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.18s ease;
+        }
+
+        .avatar:hover .avatar-overlay { opacity: 1; }
+
         .page p {
             font-size: 1.2rem;
             max-width: 600px;
@@ -169,7 +229,6 @@
         /* 下滑指示器動畫 */
         .scroll-indicator {
             animation: bounce 2s ease-in-out infinite;
-            margin-top: 20px;
             font-size: 24px;
             color: var(--scroll-indicator);
         }
@@ -246,6 +305,67 @@
             background-color: var(--btn-hover);
         }
 
+        .message {
+            margin-top: 1rem;
+            padding: 16px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            border: 1px solid transparent;
+            max-width: 100%;
+        }
+
+        .message.success {
+            background-color: rgba(76, 175, 80, 0.18);
+            color: #1b5e20;
+            border-color: rgba(76, 175, 80, 0.45);
+        }
+
+        .message.error {
+            background-color: rgba(244, 67, 54, 0.18);
+            color: #b71c1c;
+            border-color: rgba(244, 67, 54, 0.45);
+        }
+
+        [data-theme="dark"] .message.success {
+            background-color: rgba(102, 187, 106, 0.22);
+            color: #dcedc8;
+            border-color: rgba(102, 187, 106, 0.55);
+        }
+
+        [data-theme="dark"] .message.error {
+            background-color: rgba(229, 115, 115, 0.22);
+            color: #ffcdd2;
+            border-color: rgba(229, 115, 115, 0.55);
+        }
+
+        .form-result {
+            margin-top: 1.5rem;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: white;
+            font-size: 1.15rem;
+            line-height: 1.75;
+            text-align: center;
+            max-width: 100%;
+        }
+
+        .form-result p {
+            margin: 0.5rem auto;
+            max-width: 520px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            display: inline-block;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .form-result {
+            color: white;
+        }
+
         /* 返回頂部按鈕 */
         .back-top {
             position: fixed;
@@ -290,23 +410,32 @@
 
     <!-- 首頁區塊 -->
     <section id="home" class="page">
-        <h1>自我介紹</h1>
-        <p>歡迎來到我的個人網站！這裡整合了我的個人簡介、精選作品以及聯絡方式。讓我們一起探索更多可能。</p>
+        <div id="homeAvatarContainer" class="avatar-container">
+            <div class="avatar" id="homeAvatar">
+                <img id="homeAvatarImg" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%23808bb9'/><path fill='%23ffffff' d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="avatar">
+                <div class="avatar-overlay" id="homeAvatarOverlay">上傳</div>
+            </div>
+            <input type="file" id="homeAvatarInput" accept="image/*" style="display:none">
+        </div>
 
-        <div class="form-container">
+        <h1 id="homeTitleContainer"><span id="homeTitlePrefix" class="title-prefix">我是</span><span id="homeTitle">自我介紹</span></h1>
+        <p id="homeIntroText">歡迎來到我的個人網站！這裡整合了我的個人簡介、精選作品以及聯絡方式。讓我們一起探索更多可能。</p>
+
+        <div class="form-container" id="homeFormContainer">
             <form id="homeForm" onsubmit="handleHomeFormSubmit(event)">
                 <div class="form-group">
                     <label for="homeName">名字：</label>
                     <input type="text" id="homeName" placeholder="請輸入你的名字" required>
                 </div>
                 <div class="form-group">
-                    <label for="homeIntro">自我介紹：</label>
-                    <textarea id="homeIntro" placeholder="請輸入一簡單的自我介紹" required></textarea>
+                    <label for="homeIntro">自我介紹（最多150字，可留空）：</label>
+                    <textarea id="homeIntro" maxlength="150" placeholder="請輸入一簡單的自我介紹" ></textarea>
                 </div>
                 <button type="submit" class="submit-btn">確認上傳</button>
                 <div id="homeMessage" class="message" style="display:none;"></div>
             </form>
         </div>
+        <div id="homeResult" class="form-result" style="display:none;"></div>
 
         <div class="scroll-indicator">↓</div>
     </section>
@@ -405,22 +534,74 @@
             document.getElementById('contactForm').reset();
         }
 
+        function escapeHtml(text) {
+            return text.replace(/[&<>"]+/g, (match) => {
+                const escapeMap = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;'
+                };
+                return escapeMap[match];
+            });
+        }
+
         function handleHomeFormSubmit(event) {
             event.preventDefault();
             const name = document.getElementById('homeName').value.trim();
             const intro = document.getElementById('homeIntro').value.trim();
-            const messageEl = document.getElementById('homeMessage');
+            const resultEl = document.getElementById('homeResult');
+            const formContainer = document.getElementById('homeFormContainer');
+            const homeTitle = document.getElementById('homeTitle');
 
-            if (name && intro) {
-                messageEl.className = 'message success';
-                messageEl.textContent = '上傳成功！';
-            } else {
-                messageEl.className = 'message error';
-                messageEl.textContent = '請填寫完所有欄位';
+            if (!name) {
+                alert('請填寫名字');
+                return;
             }
 
-            messageEl.style.display = 'block';
-            event.target.reset();
+            if (intro.length > 150) {
+                alert('自我介紹不可超過 150 字');
+                return;
+            }
+
+            homeTitle.textContent = name;
+            document.getElementById('homeTitlePrefix').style.display = 'inline';
+
+            const homeIntroText = document.getElementById('homeIntroText');
+
+            if (intro) {
+                resultEl.innerHTML = `
+                    <p>${escapeHtml(intro)}</p>
+                `;
+                resultEl.style.display = 'block';
+                homeIntroText.parentNode.insertBefore(resultEl, homeIntroText);
+            } else {
+                resultEl.style.display = 'none';
+                resultEl.innerHTML = '';
+            }
+
+                formContainer.style.display = 'none';
+                // show avatar container and enable upload-on-hover
+                const avatarContainer = document.getElementById('homeAvatarContainer');
+                const avatarImg = document.getElementById('homeAvatarImg');
+                const avatarInput = document.getElementById('homeAvatarInput');
+                const avatarOverlay = document.getElementById('homeAvatarOverlay');
+                avatarContainer.style.display = 'flex';
+
+                // clicking overlay or avatar opens file selector
+                avatarOverlay.addEventListener('click', () => avatarInput.click());
+                document.getElementById('homeAvatar').addEventListener('click', () => avatarInput.click());
+
+                avatarInput.addEventListener('change', (e) => {
+                    const file = e.target.files && e.target.files[0];
+                    if (!file) return;
+                    if (!file.type.startsWith('image/')) return;
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        avatarImg.src = evt.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
         }
     </script>
 </body>
