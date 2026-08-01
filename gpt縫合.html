@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人自我介紹網站</title>
+    <style>
+        /* 基礎全域樣式優化 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            scroll-behavior: smooth;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* 導覽列：保留毛玻璃質感與動畫 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 18px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background: #007BFF;
+            color: white;
+        }
+
+        /* 區塊標準化：自適應內容高度，避免內容溢出 */
+        .page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 60px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        /* 精美漸層背景 */
+        #home {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        #works {
+            background: linear-gradient(135deg, #f093fb 0%, #f8e71c 100%);
+            color: #333; /* 淺色背景使用深色文字提升閱讀性 */
+        }
+
+        #contact {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: #333;
+        }
+
+        .page h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .page p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* 下滑指示器動畫 */
+        .scroll-indicator {
+            animation: bounce 2s ease-in-out infinite;
+            margin-top: 20px;
+            font-size: 24px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* 聯絡表單容器優化：融入整體視覺 */
+        .form-container {
+            width: 100%;
+            max-width: 550px;
+            margin: 20px auto 0 auto;
+            padding: 2.5rem;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #007BFF;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* 返回頂部按鈕 */
+        .back-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 900;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .back-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 統一導覽列（採用錨點平滑滾動） -->
+    <nav>
+        <a href="#home">首頁</a>
+        <a href="#works">作品展覽</a>
+        <a href="#contact">聯絡我</a>
+    </nav>
+
+    <!-- 首頁區塊 -->
+    <section id="home" class="page">
+        <h1>自我介紹</h1>
+        <p>歡迎來到我的個人網站！這裡整合了我的個人簡介、精選作品以及聯絡方式。讓我們一起探索更多可能。</p>
+        <div class="scroll-indicator">↓</div>
+    </section>
+
+    <!-- 作品區塊 -->
+    <section id="works" class="page">
+        <h1>我們的作品 & 專案</h1>
+        <p>這裡展示了我們精心打造的創意專案與創新解決方案，展現我們在網頁設計與開發上的熱情與專業實力。</p>
+        <div class="scroll-indicator">↓</div>
+    </section>
+
+    <!-- 聯絡我區塊（完美整合原表單） -->
+    <section id="contact" class="page">
+        <h1>Get In Touch / 聯絡我</h1>
+        <p>歡迎填寫下方表單與我取得聯繫，不論是合作洽談還是意見交流，我都會盡快回覆您！</p>
+        
+        <div class="form-container">
+            <form id="contactForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label for="name">姓名：</label>
+                    <input type="text" id="name" placeholder="請輸入你的姓名" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">電子郵件：</label>
+                    <input type="email" id="email" placeholder="請輸入你的電子郵件" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">留言內容：</label>
+                    <textarea id="message" placeholder="請輸入你想對我說的話..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">送出訊息</button>
+            </form>
+        </div>
+
+        <!-- 返回頂部按鈕 -->
+        <button id="backToHome" class="back-top">↑</button>
+    </section>
+
+    <script>
+        // 取得返回頂部按鈕元素
+        const backToTop = document.getElementById('backToHome');
+
+        // 監聽滾動事件，控制按鈕顯示或隱藏
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // 點擊事件：流暢返回頂部
+        backToTop.addEventListener('click', () => {
+            document.getElementById('home').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        // 表單提交處理事件（補全原本缺失的表單邏輯）
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            alert(`謝謝你的留言，${name}！訊息已成功模擬送出。`);
+            document.getElementById('contactForm').reset();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聯絡區</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+        .container {
+            background: rgba(255,255,255,0.9);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 480px;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-weight: 600;
+            color: #555;
+        }
+        input, textarea {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        button {
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        #formResult {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+        }
+        #formResult.success {
+            background: #dcfce8;
+            color: #166534;
+            border: 1px solid #86efac;
+            display: block;
+        }
+        #formResult.error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>聯絡區</h1>
+
+    <!-- Form -->
+    <form id="contactForm">
+        <label for="name">姓名</label>
+        <input type="text" id="name" placeholder="請輸入姓名">
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="請輸入 Email">
+
+        <label for="message">留言</label>
+        <textarea id="message" placeholder="請輸入留言"></textarea>
+
+        <button type="submit">送出</button>
+    </form>
+
+    <div id="formResult"></div>
+</div>
+
+<script>
+    // Validation and submission handler
+    function showResult(msg, type) {
+        const div = document.getElementById('formResult');
+        div.textContent = msg;
+        div.className = type;
+        div.style.display = 'block';
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const name   = document.getElementById('name').value.trim();
+        const email  = document.getElementById('email').value.trim();
+        const message= document.getElementById('message').value.trim();
+
+        const resultDiv = document.getElementById('formResult');
+        resultDiv.className = '';
+        resultDiv.style.display = 'none';
+
+        // Validation checks
+        if (name === '') {
+            showResult('請填寫姓名', 'error');
+            return;
+        }
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            showResult('請填寫正確的 Email 格式', 'error');
+            return;
+        }
+        if (message === '') {
+            showResult('請填寫留言', 'error');
+            return;
+        }
+
+        // If you want to actually store the data, you could add it here.
+        // For this simple version we just show the success message.
+        showResult('已送出並且存檔', 'success');
+
+        // Reset the form
+        e.target.reset();
+    });
+</script>
+</body>
+</html>
