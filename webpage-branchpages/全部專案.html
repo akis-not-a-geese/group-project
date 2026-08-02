@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全部專案</title>
+    <style>
+        :root {
+            --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: #fff;
+            --text: #111827;
+            --muted: #64748b;
+            --border: #cbd5e0;
+            --primary: #4f46e5;
+            --primary-soft: #eef2ff;
+            --surface: #f8fafc;
+            --header-bg: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            --header-text: white;
+            --link-color: #4f46e5;
+        }
+
+        [data-theme="dark"] {
+            --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: #111827;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --border: #334155;
+            --primary: #6366f1;
+            --primary-soft: rgba(99, 102, 241, 0.15);
+            --surface: #111827;
+            --header-bg: linear-gradient(135deg, #1e293b 0%, #111827 100%);
+            --header-text: #f8fafc;
+            --link-color: #93c5fd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 32px 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            color: var(--text);
+            border-radius: 24px;
+            box-shadow: 0 24px 80px rgba(15, 23, 42, 0.18);
+            overflow: hidden;
+        }
+
+        .header {
+            position: relative;
+            background: var(--header-bg);
+            color: var(--header-text);
+            padding: 36px 28px;
+            text-align: center;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            border: none;
+            background: rgba(255,255,255,0.18);
+            color: inherit;
+            padding: 10px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.28);
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: rgba(255,255,255,0.12);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            color: var(--header-text);
+        }
+
+        .content {
+            padding: 32px 28px;
+        }
+
+        .portfolio-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        .portfolio-card {
+            width: min(320px, 100%);
+            background: #ffffff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .portfolio-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .portfolio-card-content {
+            padding: 20px;
+        }
+
+        .portfolio-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #111827;
+        }
+
+        .portfolio-card-description {
+            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .portfolio-card-date {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .portfolio-card-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .portfolio-card-actions button {
+            flex: 1;
+            padding: 10px 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .portfolio-card-actions .edit-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .portfolio-card-actions .delete-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .portfolio-card-actions button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+
+        .message {
+            margin-top: 1rem;
+            padding: 16px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            border: 1px solid rgba(0,0,0,0.08);
+            background: rgba(255,255,255,0.9);
+            color: #1f2937;
+            text-align: center;
+        }
+
+        .back-link,
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 24px;
+            color: var(--link-color);
+            font-weight: 700;
+            text-decoration: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(79, 70, 229, 0.18);
+            background: rgba(79, 70, 229, 0.08);
+        }
+
+        .page-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 20px;
+            }
+
+            .content {
+                padding: 24px 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button id="themeToggle" type="button" class="theme-toggle" aria-label="切換深色模式">
+                <span id="themeIcon">🌙</span>
+                <span id="themeText">深色</span>
+            </button>
+            <h1>全部專案</h1>
+            <p>這裡展示所有已上傳的作品。</p>
+        </div>
+        <div class="content">
+            <div id="portfolioList" class="portfolio-list"></div>
+            <div id="emptyMessage" class="message" style="display:block;">目前尚無專案，請先前往作品上傳頁面新增。</div>
+            <div class="page-actions">
+                <a href="作品上傳.html" class="action-btn">📤 新增專案</a>
+                <a href="final demo.html" class="back-link">← 返回首頁</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const portfolioList = document.getElementById('portfolioList');
+        const emptyMessage = document.getElementById('emptyMessage');
+        const PORTFOLIO_STORAGE_KEY = 'uploadedPortfolioItems';
+
+        function getInitialTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = '淺色';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = '深色';
+            }
+        }
+
+        function getStoredProjects() {
+            try {
+                return JSON.parse(localStorage.getItem(PORTFOLIO_STORAGE_KEY)) || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function renderPortfolioList() {
+            const items = getStoredProjects();
+            if (!portfolioList) return;
+            if (!items.length) {
+                portfolioList.innerHTML = '';
+                emptyMessage.style.display = 'block';
+                return;
+            }
+            emptyMessage.style.display = 'none';
+            portfolioList.innerHTML = items.map((item, index) => `
+                <div class="portfolio-card">
+                    <img src="${item.cover}" alt="${item.title} 封面">
+                    <div class="portfolio-card-content">
+                        <div class="portfolio-card-title">${escapeHtml(item.title)}</div>
+                        <div class="portfolio-card-description">${escapeHtml(item.description)}</div>
+                        <div class="portfolio-card-date">上傳時間：${new Date(item.uploadedAt).toLocaleString('zh-TW')}</div>
+                        <div class="portfolio-card-actions">
+                            <button class="edit-btn" data-index="${index}">修改</button>
+                            <button class="delete-btn" data-index="${index}">刪除</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveProjects(items) {
+            localStorage.setItem(PORTFOLIO_STORAGE_KEY, JSON.stringify(items));
+        }
+
+        function deletePortfolioItem(index) {
+            const items = getStoredProjects();
+            if (index < 0 || index >= items.length) return;
+            items.splice(index, 1);
+            saveProjects(items);
+            renderPortfolioList();
+        }
+
+        function editPortfolioItem(index) {
+            const items = getStoredProjects();
+            const item = items[index];
+            if (!item) return;
+
+            const newTitle = prompt('編輯作品名稱', item.title);
+            if (newTitle === null) return;
+            const newDescription = prompt('編輯作品介紹', item.description);
+            if (newDescription === null) return;
+
+            item.title = newTitle.trim() || item.title;
+            item.description = newDescription.trim() || item.description;
+            items[index] = item;
+            saveProjects(items);
+            renderPortfolioList();
+        }
+
+        portfolioList.addEventListener('click', (event) => {
+            const button = event.target.closest('button');
+            if (!button) return;
+            const index = Number(button.dataset.index);
+            if (button.classList.contains('delete-btn')) {
+                deletePortfolioItem(index);
+            }
+            if (button.classList.contains('edit-btn')) {
+                editPortfolioItem(index);
+            }
+        });
+
+        function escapeHtml(text) {
+            return text.replace(/[&<>"]+/g, (match) => {
+                const escapeMap = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;'
+                };
+                return escapeMap[match];
+            });
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+            });
+        }
+
+        applyTheme(getInitialTheme());
+        renderPortfolioList();
+        window.addEventListener('pageshow', renderPortfolioList);
+    </script>
+</body>
+</html>

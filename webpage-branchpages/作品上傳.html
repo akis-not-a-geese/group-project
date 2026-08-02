@@ -1,0 +1,542 @@
+上傳<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品上傳</title>
+    <style>
+        :root {
+            --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: #fff;
+            --text: #111827;
+            --muted: #64748b;
+            --border: #cbd5e0;
+            --primary: #4f46e5;
+            --primary-soft: #eef2ff;
+            --surface: #f8fafc;
+            --header-bg: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+            --header-text: white;
+            --success-bg: #dcfce7;
+            --success-border: #86efac;
+            --success-text: #166534;
+            --link-color: #4f46e5;
+        }
+
+        [data-theme="dark"] {
+            --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --card-bg: #111827;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --border: #334155;
+            --primary: #6366f1;
+            --primary-soft: rgba(99, 102, 241, 0.15);
+            --surface: #111827;
+            --header-bg: linear-gradient(135deg, #1e293b 0%, #111827 100%);
+            --header-text: #f8fafc;
+            --success-bg: #153b18;
+            --success-border: #2f855a;
+            --success-text: #a7f3d0;
+            --link-color: #93c5fd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 32px 20px;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            color: var(--text);
+            border-radius: 20px;
+            box-shadow: 0 24px 80px rgba(15, 23, 42, 0.18);
+            overflow: hidden;
+        }
+
+        body {
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .header {
+            position: relative;
+            background: var(--header-bg);
+            color: var(--header-text);
+            padding: 34px 28px;
+            text-align: center;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            border: none;
+            background: rgba(255,255,255,0.18);
+            color: inherit;
+            padding: 10px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.28);
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: rgba(255,255,255,0.12);
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            color: var(--header-text);
+        }
+
+        .content {
+            padding: 32px 28px;
+        }
+
+        .upload-section,
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .upload-section label,
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .upload-text {
+            font-size: 0.95rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .upload-text strong {
+            color: #93c5fd;
+        }
+
+        .cover-upload-wrapper {
+            position: relative;
+            border: 2px dashed var(--border);
+            border-radius: 18px;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cover-upload-wrapper:hover {
+            border-color: var(--primary);
+            background: var(--surface);
+        }
+
+        .cover-upload-wrapper.active {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+        }
+
+        .cover-upload-wrapper.active .upload-placeholder {
+            display: none;
+        }
+
+        .cover-upload {
+            display: none;
+        }
+
+        .upload-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 44px 18px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--primary);
+        }
+
+        .upload-text {
+            font-size: 0.95rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .upload-text strong {
+            color: #2563eb;
+        }
+
+        .cover-preview {
+            display: none;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 18px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            font-size: 1rem;
+            color: var(--text);
+            background: var(--surface);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .portfolio-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .portfolio-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px rgba(79, 70, 229, 0.22);
+        }
+
+        .portfolio-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: var(--success-text);
+            padding: 16px 18px;
+            border-radius: 14px;
+            margin-top: 18px;
+            font-size: 0.95rem;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 18px;
+            color: var(--link-color);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 24px 16px;
+            }
+
+            .header {
+                padding: 28px 18px;
+            }
+
+            .content {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+                    <button id="themeToggle" type="button" class="theme-toggle" aria-label="切換深色模式">
+                        <span id="themeIcon">🌙</span>
+                        <span id="themeText">深色</span>
+                    </button>
+                <h1>作品上傳</h1>
+        </div>
+
+        <div class="content">
+            <div class="upload-section">
+                <label for="coverInput">作品封面上傳</label>
+                <div class="cover-upload-wrapper" id="uploadWrapper">
+                    <input type="file" id="coverInput" class="cover-upload" accept="image/*">
+                    <div class="upload-placeholder">
+                        <div class="upload-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+                                <polyline points="7,10 12,15 17,10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                        </div>
+                        <div class="upload-text">
+                            點擊上傳 <strong>封面圖片</strong>（PNG、JPG、GIF，最多 5MB）
+                        </div>
+                    </div>
+                    <img src="" alt="Cover Preview" class="cover-preview" id="coverPreview">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="projectName">作品名稱</label>
+                <input type="text" id="projectName" placeholder="輸入作品名稱">
+            </div>
+
+            <div class="form-group">
+                <label for="description">作品介紹</label>
+                <textarea id="description" placeholder="請簡要描述你的作品..."></textarea>
+            </div>
+
+            <button class="portfolio-btn" id="submitBtn" disabled>上傳作品</button>
+
+            <div class="success-message" id="successMessage">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 11-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                作品上傳成功！
+            </div>
+
+            <a href="final demo.html" class="back-link">← 返回首頁</a>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const coverInput = document.getElementById('coverInput');
+        const uploadWrapper = document.getElementById('uploadWrapper');
+        const coverPreview = document.getElementById('coverPreview');
+        const projectName = document.getElementById('projectName');
+        const description = document.getElementById('description');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+
+        const PORTFOLIO_STORAGE_KEY = 'uploadedPortfolioItems';
+
+        function getInitialTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = '淺色';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = '深色';
+            }
+        }
+
+        function getStoredProjects() {
+            try {
+                return JSON.parse(localStorage.getItem(PORTFOLIO_STORAGE_KEY)) || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveProject(item) {
+            const items = getStoredProjects();
+            items.unshift(item);
+            localStorage.setItem(PORTFOLIO_STORAGE_KEY, JSON.stringify(items));
+        }
+
+        function isProjectNameDuplicate(name) {
+            const items = getStoredProjects();
+            return items.some(item => item.title.trim().toLowerCase() === name.trim().toLowerCase());
+        }
+
+        function checkPortfolioFormValidity() {
+            const hasFile = coverInput.files.length > 0;
+            const hasName = projectName.value.trim().length > 0;
+            const hasDescription = description.value.trim().length > 0;
+            submitBtn.disabled = !(hasFile && hasName && hasDescription);
+        }
+
+        coverInput.addEventListener('change', function() {
+            const file = coverInput.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('檔案必須小於 5MB');
+                    coverInput.value = '';
+                    checkPortfolioFormValidity();
+                    return;
+                }
+                if (!file.type.startsWith('image/')) {
+                    alert('請選擇圖片檔案');
+                    coverInput.value = '';
+                    checkPortfolioFormValidity();
+                    return;
+                }
+
+                uploadWrapper.classList.add('active');
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    coverPreview.src = e.target.result;
+                    coverPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+                checkPortfolioFormValidity();
+            }
+        });
+
+        uploadWrapper.addEventListener('click', function() {
+            coverInput.click();
+        });
+
+        projectName.addEventListener('input', checkPortfolioFormValidity);
+        description.addEventListener('input', checkPortfolioFormValidity);
+
+        submitBtn.addEventListener('click', function() {
+            const coverFile = coverInput.files[0];
+            const name = projectName.value.trim();
+            const desc = description.value.trim();
+
+            if (!coverFile) {
+                alert('請上傳封面圖片');
+                return;
+            }
+            if (!name || !desc) {
+                alert('請填寫作品名稱與介紹');
+                return;
+            }
+            if (isProjectNameDuplicate(name)) {
+                alert('此專案名已存在，請重新輸入');
+                projectName.focus();
+                return;
+            }
+
+            submitBtn.textContent = '上傳中...';
+            submitBtn.disabled = true;
+
+            setTimeout(() => {
+                submitBtn.textContent = '上傳作品';
+                submitBtn.disabled = false;
+                successMessage.classList.add('show');
+
+                if (coverPreview.src) {
+                    saveProject({
+                        cover: coverPreview.src,
+                        title: name,
+                        description: desc,
+                        uploadedAt: Date.now()
+                    });
+                }
+
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                    coverInput.value = '';
+                    coverPreview.src = '';
+                    coverPreview.style.display = 'none';
+                    uploadWrapper.classList.remove('active');
+                    projectName.value = '';
+                    description.value = '';
+                    checkPortfolioFormValidity();
+                }, 3000);
+            }, 1500);
+        });
+
+        function resetUploadState() {
+            coverInput.value = '';
+            coverPreview.src = '';
+            coverPreview.style.display = 'none';
+            uploadWrapper.classList.remove('active');
+            projectName.value = '';
+            description.value = '';
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+            });
+        }
+
+        applyTheme(getInitialTheme());
+        resetUploadState();
+        checkPortfolioFormValidity();
+
+        window.addEventListener('pageshow', () => {
+            resetUploadState();
+            checkPortfolioFormValidity();
+        });
+
+        window.addEventListener('pageshow', () => {
+            resetUploadState();
+            checkPortfolioFormValidity();
+        });
+    </script>
+</body>
+</html>
