@@ -1,0 +1,265 @@
+ <!DOCTYPE html>
+  <html lang="zh-TW">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>我的作品集</title>
+      <style>
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              line-height: 1.6;
+              color: #333;
+              max-width: 800px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #f9f9f9;
+          }
+          h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }
+          .work-item {
+              background: white;
+              border-radius: 10px;
+              padding: 20px;
+              margin-bottom: 25px;
+              box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+              border-left: 4px solid #3498db;
+          }
+          .work-item.private { border-left-color: #e74c3c; background-color: #fdf2f2; }
+          .work-item.public  { border-left-color: #2ecc71; background-color: #f0f9f0; }
+          .work-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 15px;
+              flex-wrap: wrap;
+              gap: 10px;
+          }
+          .work-title { flex: 1; min-width: 200px; }
+          .work-title input,
+          .work-description textarea {
+              width: 100%;
+              padding: 10px;
+              border: 2px solid #ddd;
+              border-radius: 5px;
+              font-size: 14px;
+              font-family: inherit;
+          }
+          .work-title input:focus,
+          .work-description textarea:focus { outline: none; border-color: #3498db; }
+          .work-description { margin: 15px 0; }
+          .work-description label,
+          .work-title label { display: block; margin-bottom: 5px; font-weight: 600; color: #2c3e50; }
+          .work-description textarea { height: 100px; resize: vertical; }
+          .toggle-container { display: flex; align-items: center; gap: 10px; }
+          .toggle-label { font-weight: 600; color: #2c3e50; }
+          .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+          .toggle-switch input { opacity: 0; width: 0; height: 0; }
+          .slider {
+              position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+              background-color: #ccc; transition: .4s; border-radius: 34px;
+          }
+          .slider:before {
+              position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px;
+              background-color: white; transition: .4s; border-radius: 50%;
+          }
+          input:checked + .slider { background-color: #2ecc71; }
+          input:checked + .slider:before { transform: translateX(24px); }
+          .status-badge {
+              display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px;
+              font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+          }
+          .status-badge.public  { background-color: #d5f5e3; color: #27ae60; border: 1px solid #2ecc71; }
+          .status-badge.private { background-color: #fadbd8; color: #c0392b; border: 1px solid #e74c3c; }
+          .upload-section { text-align: right; margin-top: 10px; display: flex; gap: 10px; align-items: center; }
+          .upload-section button {
+              padding: 6px 12px; background-color: #3498db; border: none; border-radius: 4px;
+              color: white; cursor: pointer; font-size: 14px;
+          }
+          .upload-section button:hover { background-color: #2980b9; }
+          .upload-status { font-weight: 600; color: #27ae60; }
+          .footer { text-align: center; margin-top: 30px; color: #7f8c8d; font-size: 14px; }
+          @media (max-width: 600px) {
+              .work-header { flex-direction: column; align-items: flex-start; }
+              .toggle-container { align-self: flex-start; margin-top: 10px; }
+              .upload-section { flex-direction: column; align-items: flex-start; margin-top: 8px; }
+          }
+      </style>
+  </head>
+  <body>
+      <h1>我的作品集</h1>
+      <div id="portfolio-container"></div>
+      <div class="footer">
+          <p>切換開關來控制作品的公開狀態</p>
+      </div>
+
+      <script>
+          document.addEventListener('DOMContentLoaded', function () {
+              const container = document.getElementById('portfolio-container');
+              for (let i = 1; i <= 3; i++) {
+                  container.appendChild(createWorkItem(i));
+              }
+              loadWorkStates();
+          });
+
+          function createWorkItem(index) {
+              const workItem = document.createElement('div');
+              workItem.className = 'work-item';
+              workItem.dataset.index = index;
+
+              workItem.innerHTML = `
+                  <div class="work-header">
+                      <div class="work-title">
+                          <label for="work-title-${index}">作品標題 ${index}</label>
+                          <input type="text" id="work-title-${index}" placeholder="輸入作品標題...">
+                      </div>
+                      <div class="toggle-container">
+                          <label class="toggle-label" for="toggle-${index}">公開:</label>
+                          <label class="toggle-switch">
+                              <input type="checkbox" id="toggle-${index}">
+                              <span class="slider"></span>
+                          </label>
+                      </div>
+                  </div>
+
+                  <div class="work-description">
+                      <label for="work-desc-${index}">作品介紹:</label>
+                      <textarea id="work-desc-${index}" placeholder="請輸入作品的詳細描述..." tabindex="${index * 10}"></textarea>
+                  </div>
+
+                  <div class="upload-section">
+                      <button type="button" id="upload-${index}">上傳作品</button>
+                      <span class="upload-status" id="upload-status-${index}"></span>
+                  </div>
+
+                  <div style="text-align: right; margin-top: 10px;">
+                      <span class="status-badge" id="status-${index}">私密</span>
+                  </div>
+              `;
+
+              /* Public/Private Toggle Logic */
+              const toggle = workItem.querySelector(`#toggle-${index}`);
+              toggle.addEventListener('change', function () {
+                  updateWorkStatus(index, this.checked);
+              });
+
+              /* Upload Logic */
+              const uploadBtn = workItem.querySelector(`#upload-${index}`);
+              const uploadStatus = workItem.querySelector(`#upload-status-${index}`);
+
+              uploadBtn.addEventListener('click', function () {
+                  const title = document.getElementById(`work-title-${index}`).value.trim();
+                  const desc = document.getElementById(`work-desc-${index}`).value.trim();
+
+                  if (title === '' || desc === '') {
+                      uploadStatus.textContent = '未填寫';
+                      return;
+                  }
+
+                  uploadStatus.textContent = '已上傳';
+                  setTimeout(() => {
+                      if (uploadStatus.textContent === '已上傳') {
+                          uploadStatus.textContent = '';
+                          if (uploadStatus.textContent === '已上傳') {
+                              uploadStatus.textContent = '';
+                          }
+                      }
+                  }, 5000);
+              });
+
+              // Auto-clear "未填寫" once user interacts with title/description
+              workItem.querySelector(`#work-title-${index}`).addEventListener('input', function () {
+                  if (uploadStatus.textContent === '未填寫') uploadStatus.textContent = '';
+              });
+              workItem.querySelector(`#work-desc-${index}`).addEventListener('input', function () {
+                  if (uploadStatus.textContent === '未填寫') uploadStatus.textContent = '';
+              });
+
+              return workItem;
+          }
+
+          function updateWorkStatus(index, isPublic) {
+              const statusBadge = document.getElementById(`status-${index}`);
+              const workItem = document.querySelector(`.work-item[data-index="${index}"]`);
+
+              if (isPublic) {
+                  statusBadge.textContent = '公開';
+                  statusBadge.className = 'status-badge public';
+                  workItem.classList.remove('private');
+                  workItem.classList.add('public');
+              } else {
+                  statusBadge.textContent = '私密';
+                  statusBadge.className = 'status-badge private';
+                  workItem.classList.remove('public');
+                  workItem.classList.add('private');
+              }
+
+              const workStates = JSON.parse(localStorage.getItem('workStates') || '{}');
+              workStates[index] = isPublic;
+              localStorage.setItem('workStates', JSON.stringify(workStates));
+          }
+
+          function loadWorkStates() {
+              const workStates = JSON.parse(localStorage.getItem('workStates') || '{}');
+              for (let index = 1; index <= 3; index++) {
+                  const isPublic = workStates[index] !== undefined ? workStates[index] : false;
+                  updateWorkStatus(index, isPublic);
+              }
+          }
+      </script>
+  </body>
+  </html>
+ <!DOCTYPE html>
+  <html lang="zh-TW">
+  <head>
+   meta charset="UTF-8">
+   meta name="viewport" content="width=device-width, initial-scale=1.0">
+   title>我的作品集title>
+   style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px;
+  background-color: #f9f9f9; }
+
+      h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }
+
+      .work-item {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border-left: 4px solid #3498db;
+      }
+
+      .work-item.private {
+        border-left-color: #e74c3c;
+        background-color: #fdf2f2;
+      }
+
+      .work-item.public {
+        border-left-color: #2ecc71;
+        background-color: #f0f9f0;
+      }
+
+      /* ✅ 此處變更：輸入框邊框為紅色 */
+      .work-title input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #dc2626; /* 紅色邊框 */
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      .work-title input:focus {
+        outline: none;
+        border-color: #3498db;
+      }
+
+      /* ✅ 此處變更：紅色閃爍效果 */
+      .title-error {
+        animation: flash 1s infinite;
+      }
+
+      @keyframes flash {
+        0% { box-shadow: none; }
+        50% { transform: scale(1.05); background: #ffc1c1; }
+        100% { box-shadow: none; }
