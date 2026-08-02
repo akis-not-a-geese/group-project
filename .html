@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人自我介紹網站</title>
+    <style>
+        :root {
+            --bg-home: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-works: linear-gradient(135deg, #f093fb 0%, #f8e71c 100%);
+            --bg-contact: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --nav-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --text-primary: #333;
+            --text-on-gradient: white;
+            --btn-bg: #007BFF;
+            --btn-hover: #0056b3;
+            --btn-text: white;
+            --backtop-bg: #007BFF;
+            --backtop-hover: #0056b3;
+            --scroll-indicator: white;
+            --form-bg: rgba(255, 255, 255, 0.95);
+            --form-border: #ddd;
+            --form-label: #333;
+            --body-bg: #f5f5f5;
+            --body-text: #333;
+            --input-bg: rgba(255, 255, 255, 0.92);
+            --input-text: #333;
+            --input-border: #ddd;
+        }
+
+        [data-theme="dark"] {
+            --bg-home: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --bg-works: linear-gradient(135deg, #2d1b3d 0%, #3d2e00 100%);
+            --bg-contact: linear-gradient(135deg, #0d2b1e 0%, #0a3d35 100%);
+            --nav-bg: rgba(20, 20, 30, 0.95);
+            --nav-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            --text-primary: #e0e0e0;
+            --text-on-gradient: #f0f0f0;
+            --btn-bg: #4da3ff;
+            --btn-hover: #7ab8ff;
+            --btn-text: #1a1a2e;
+            --backtop-bg: #4da3ff;
+            --backtop-hover: #7ab8ff;
+            --scroll-indicator: #e0e0e0;
+            --form-bg: rgba(30, 30, 40, 0.92);
+            --form-border: #444;
+            --form-label: #f0f0f0;
+            --body-bg: #111;
+            --body-text: #e5e5e5;
+            --input-bg: rgba(255, 255, 255, 0.08);
+            --input-text: #e5e5e5;
+            --input-border: #444;
+        }
+
+        /* 全域樣式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            scroll-behavior: smooth;
+            background-color: var(--body-bg);
+            color: var(--body-text);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* 導覽列 */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: var(--nav-shadow);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 18px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+        }
+
+        #themeToggle {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        /* 頁面區塊 */
+        .page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 60px 20px;
+            text-align: center;
+            color: var(--text-on-gradient);
+            transition: background 0.5s ease, color 0.3s ease;
+        }
+
+        #home {
+            background: var(--bg-home);
+            position: relative;
+        }
+
+        #works {
+            background: var(--bg-works);
+            color: #333;
+        }
+
+        #contact {
+            background: var(--bg-contact);
+            color: #333;
+        }
+
+        [data-theme="dark"] #works,
+        [data-theme="dark"] #contact {
+            color: var(--text-on-gradient);
+        }
+
+        .page h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .title-prefix {
+            display: none;
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.8;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+
+        .avatar-container {
+            display: none;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .avatar {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid rgba(255,255,255,0.12);
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .avatar-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.45);
+            color: white;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.18s ease;
+        }
+
+        .avatar:hover .avatar-overlay { opacity: 1; }
+
+        .page p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .scroll-indicator {
+            animation: bounce 2s ease-in-out infinite;
+            font-size: 24px;
+            color: var(--scroll-indicator);
+            margin-top: 20px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* 表單容器 */
+        .form-container {
+            width: 100%;
+            max-width: 550px;
+            margin: 20px auto 0 auto;
+            padding: 2.5rem;
+            background-color: var(--form-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--form-label);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--btn-bg);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* 按鈕組 */
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .submit-btn {
+            flex: 2;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .clear-btn {
+            flex: 1;
+            background-color: #f44336;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .clear-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        .form-result {
+            margin-top: 1.5rem;
+            padding: 0;
+            background: transparent;
+            color: white;
+            font-size: 1.15rem;
+            line-height: 1.75;
+            text-align: center;
+        }
+
+        .form-result p {
+            margin: 0.5rem auto;
+            max-width: 520px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .back-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--backtop-bg);
+            color: var(--btn-text);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 900;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#home">首頁</a>
+        <a href="#works">作品集</a>
+        <a href="#contact">聯絡我</a>
+        <button id="themeToggle" aria-label="切換深色模式">
+            <span id="themeIcon">🌙</span>
+            <span id="themeText">Dark</span>
+        </button>
+    </nav>
+
+    <section id="home" class="page">
+        <div id="homeAvatarContainer" class="avatar-container">
+            <div class="avatar" id="homeAvatar">
+                <img id="homeAvatarImg" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' fill='%23808bb9'/><path fill='%23ffffff' d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="avatar">
+                <div class="avatar-overlay" id="homeAvatarOverlay">上傳</div>
+            </div>
+            <input type="file" id="homeAvatarInput" accept="image/*" style="display:none">
+        </div>
+
+        <h1 id="homeTitleContainer"><span id="homeTitlePrefix" class="title-prefix">我是</span><span id="homeTitle">自我介紹</span></h1>
+        <p id="homeIntroText">歡迎來到我的個人網站！這裡整合了我的個人簡介、精選作品以及聯絡方式。讓我們一起探索更多可能。</p>
+
+        <div class="form-container" id="homeFormContainer">
+            <form id="homeForm" onsubmit="handleHomeFormSubmit(event)">
+                <div class="form-group">
+                    <label for="homeName">名字：</label>
+                    <input type="text" id="homeName" placeholder="請輸入你的名字" required>
+                </div>
+                <div class="form-group">
+                    <label for="homeIntro">自我介紹（最多150字，可留空）：</label>
+                    <textarea id="homeIntro" maxlength="150" placeholder="請輸入一簡單的自我介紹"></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="submit-btn">確認上傳</button>
+                    <button type="button" class="clear-btn clearTextBtn">清除文字</button>
+                </div>
+            </form>
+        </div>
+        <div id="homeResult" class="form-result" style="display:none;"></div>
+
+        <div class="scroll-indicator">↓</div>
+    </section>
+
+    <section id="works" class="page">
+        <h1>我們的作品 & 專案</h1>
+        <p>這裡展示了我們精心打造的創意專案與創新解決方案，展現我們在網頁設計與開發上的熱情與專業實力。</p>
+        <div class="scroll-indicator">↓</div>
+    </section>
+
+    <section id="contact" class="page">
+        <h1>Get In Touch / 聯絡我</h1>
+        <p>歡迎填寫下方表單與我取得聯繫，不論是合作洽談還是意見交流，我都會盡快回覆您！</p>
+        
+        <div class="form-container">
+            <form id="contactForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label for="name">姓名：</label>
+                    <input type="text" id="name" placeholder="請輸入你的姓名" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">電子郵件：</label>
+                    <input type="email" id="email" placeholder="請輸入你的電子郵件" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">留言內容：</label>
+                    <textarea id="message" placeholder="請輸入你想對我說的話..." required></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="submit-btn">送出訊息</button>
+                    <button type="button" class="clear-btn clearTextBtn">清除文字</button>
+                </div>
+            </form>
+        </div>
+
+        <button id="backToHome" class="back-top">↑</button>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- 主題切換邏輯 ---
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            const html = document.documentElement;
+
+            function getInitialTheme() {
+                const saved = localStorage.getItem('theme');
+                if (saved) return saved;
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            function applyTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                if (theme === 'dark') {
+                    themeIcon.textContent = '☀️';
+                    themeText.textContent = 'Light';
+                } else {
+                    themeIcon.textContent = '🌙';
+                    themeText.textContent = 'Dark';
+                }
+            }
+
+            applyTheme(getInitialTheme());
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-theme');
+                applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+            });
+
+            // --- 返回頂部邏輯 ---
+            const backToTop = document.getElementById('backToHome');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTop.classList.add('show');
+                } else {
+                    backToTop.classList.remove('show');
+                }
+            });
+
+            backToTop.addEventListener('click', () => {
+                document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // --- 清除文字功能 (優化白名單版) ---
+            const clearBtns = document.querySelectorAll('.clearTextBtn');
+            const textInputTypes = ['text', 'password', 'email', 'search', 'tel', 'url', 'number'];
+
+            clearBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    // 找到該按鈕所在的表單，若無則預設為全局
+                    const parentForm = this.closest('form') || document;
+                    
+                    const inputs = parentForm.querySelectorAll('input, textarea');
+                    inputs.forEach(el => {
+                        const isTextarea = el.tagName.toLowerCase() === 'textarea';
+                        const isTextInput = textInputTypes.includes(el.type.toLowerCase());
+                        if (isTextarea || isTextInput) {
+                            el.value = '';
+                        }
+                    });
+
+                    const editables = parentForm.querySelectorAll('[contenteditable="true"]');
+                    editables.forEach(el => {
+                        el.innerHTML = '';
+                    });
+
+                    alert('已清除欄位文字！');
+                });
+            });
+
+            // --- 頭像上傳事件初始化 (使用 URL.createObjectURL 優化效能) ---
+            const avatarContainer = document.getElementById('homeAvatarContainer');
+            const avatarImg = document.getElementById('homeAvatarImg');
+            const avatarInput = document.getElementById('homeAvatarInput');
+            const avatarOverlay = document.getElementById('homeAvatarOverlay');
+
+            avatarOverlay.addEventListener('click', () => avatarInput.click());
+            document.getElementById('homeAvatar').addEventListener('click', () => avatarInput.click());
+
+            avatarInput.addEventListener('change', (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file || !file.type.startsWith('image/')) return;
+
+                if (avatarImg.src.startsWith('blob:')) {
+                    URL.revokeObjectURL(avatarImg.src);
+                }
+                avatarImg.src = URL.createObjectURL(file);
+            });
+        });
+
+        // --- 表單提交邏輯 ---
+        function escapeHtml(text) {
+            return text.replace(/[&<>"]+/g, (match) => {
+                const escapeMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+                return escapeMap[match];
+            });
+        }
+
+        function handleHomeFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('homeName').value.trim();
+            const intro = document.getElementById('homeIntro').value.trim();
+            const resultEl = document.getElementById('homeResult');
+            const formContainer = document.getElementById('homeFormContainer');
+            const homeTitle = document.getElementById('homeTitle');
+            const homeIntroText = document.getElementById('homeIntroText');
+            const avatarContainer = document.getElementById('homeAvatarContainer');
+
+            if (!name) {
+                alert('請填寫名字');
+                return;
+            }
+
+            homeTitle.textContent = name;
+            document.getElementById('homeTitlePrefix').style.display = 'inline';
+
+            if (intro) {
+                resultEl.innerHTML = `<p>${escapeHtml(intro)}</p>`;
+                resultEl.style.display = 'block';
+                homeIntroText.parentNode.insertBefore(resultEl, homeIntroText);
+            } else {
+                resultEl.style.display = 'none';
+                resultEl.innerHTML = '';
+            }
+
+            formContainer.style.display = 'none';
+            avatarContainer.style.display = 'flex';
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            alert(`謝謝你的留言，${name}！訊息已成功模擬送出。`);
+            document.getElementById('contactForm').reset();
+        }
+    </script>
+</body>
+</html>
