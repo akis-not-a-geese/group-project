@@ -3,87 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>個人作品集與簡介</title>
+    <title>個人作品集與簡介網站</title>
     <style>
+        :root {
+            /* 淺色主題變數 */
+            --bg-home: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-works: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            --bg-contact: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            --nav-bg: rgba(255, 255, 255, 0.9);
+            --nav-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --text-nav: #2d3748;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-text: #2d3748;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e0;
+            --input-text: #1a202c;
+            --btn-bg: linear-gradient(135deg, #6b46c1 0%, #5a67d8 100%);
+            --btn-hover-shadow: rgba(107, 70, 193, 0.4);
+            --btn-text: #ffffff;
+            --scroll-indicator: #ffffff;
+            --subcard-bg: #f8fafc;
+        }
+
+        [data-theme="dark"] {
+            /* 深色主題變數 */
+            --bg-home: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --bg-works: linear-gradient(135deg, #1e1035 0%, #2e1065 100%);
+            --bg-contact: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+            --nav-bg: rgba(15, 23, 42, 0.9);
+            --nav-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            --text-nav: #f1f5f9;
+            --card-bg: rgba(30, 41, 59, 0.95);
+            --card-text: #f1f5f9;
+            --input-bg: #0f172a;
+            --input-border: #334155;
+            --input-text: #f8fafc;
+            --btn-bg: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            --btn-hover-shadow: rgba(139, 92, 246, 0.5);
+            --btn-text: #ffffff;
+            --scroll-indicator: #cbd5e0;
+            --subcard-bg: #1e293b;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-            display: flex;
-            flex-direction: column;
+        html {
+            scroll-behavior: smooth;
         }
 
-        /* 導覽列 Navbar */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            transition: background 0.3s ease, color 0.3s ease;
+            color: var(--card-text);
+        }
+
+        /* 頂部固定導覽列 Navigation */
         nav {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            box-shadow: var(--nav-shadow);
             z-index: 1000;
             display: flex;
             justify-content: center;
-            gap: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            align-items: center;
+            gap: 20px;
+            transition: background 0.3s ease;
         }
 
         nav a {
-            color: #f1f5f9;
             text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 500;
+            color: var(--text-nav);
+            font-weight: 600;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
             transition: all 0.3s ease;
         }
 
-        nav a:hover, nav a.active-link {
-            background-color: #6b46c1;
-            color: #fff;
-            box-shadow: 0 2px 10px rgba(107, 70, 193, 0.4);
+        nav a:hover {
+            background: var(--btn-bg);
+            color: var(--btn-text);
         }
 
-        /* 頁面主要容器 Container */
-        .container {
-            max-width: 850px;
-            width: 100%;
-            margin: 30px auto;
-            padding: 0 20px;
-            flex: 1;
+        /* 深淺色主題切換按鈕 */
+        #themeToggle {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
+        #themeToggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px var(--btn-hover-shadow);
+        }
+
+        /* 頁面主要區塊 Section */
         .page {
-            display: none;
-            background: #ffffff;
-            border-radius: 16px;
+            min-height: 100vh;
+            padding: 100px 20px 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            scroll-margin-top: 60px;
+            position: relative;
+        }
+
+        #home { background: var(--bg-home); }
+        #works { background: var(--bg-works); }
+        #contact { background: var(--bg-contact); }
+
+        /* 卡片容器 */
+        .card-container {
+            background: var(--card-bg);
+            color: var(--card-text);
+            max-width: 750px;
+            width: 100%;
             padding: 32px;
-            box-shadow: 0 2px 60px rgba(0, 0, 0, 0.25);
-            animation: fadeIn 0.4s ease-in-out;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease;
         }
 
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h1 {
-            color: #2c3e50;
+        .card-container h1 {
             text-align: center;
             margin-bottom: 24px;
             font-size: 28px;
         }
 
-        /* 表單共用樣式 Form Styles */
+        /* 共用表單樣式 */
         .form-group {
             margin-bottom: 20px;
         }
@@ -92,32 +158,34 @@
             display: block;
             font-size: 14px;
             font-weight: 600;
-            color: #374151;
             margin-bottom: 8px;
+            opacity: 0.9;
         }
 
         .form-group input, 
         .form-group textarea {
             width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e2e8f0;
+            padding: 12px 16px;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            color: var(--input-text);
             border-radius: 8px;
             font-size: 15px;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
         }
 
         .form-group input:focus, 
         .form-group textarea:focus {
             outline: none;
-            border-color: #6b46c1;
-            box-shadow: 0 0 0 3px rgba(107, 70, 193, 0.1);
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
         }
 
         .btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-            color: white;
+            background: var(--btn-bg);
+            color: var(--btn-text);
             border: none;
             border-radius: 8px;
             font-size: 16px;
@@ -128,7 +196,7 @@
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(92, 103, 216, 0.4);
+            box-shadow: 0 6px 20px var(--btn-hover-shadow);
         }
 
         .btn:disabled {
@@ -138,13 +206,13 @@
             box-shadow: none;
         }
 
-        /* 訊息提示框 Notice Box */
+        /* 狀態訊息提示框 */
         .message-box {
             display: none;
             margin-top: 15px;
             padding: 12px;
             border-radius: 8px;
-            font-weight: 500;
+            font-weight: 600;
             text-align: center;
             font-size: 14px;
         }
@@ -163,105 +231,83 @@
             border: 1px solid #fecaca;
         }
 
-        /* ----- [首頁] 個人簡介樣式 ----- */
-        .profile-card {
-            background: #f8fafc;
+        /* ===== 首頁 (Home) 樣式 ===== */
+        .profile-display-card {
+            background: var(--subcard-bg);
             border-radius: 12px;
-            padding: 24px;
-            margin-top: 20px;
-            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-top: 24px;
+            border: 1px solid var(--input-border);
         }
 
-        /* ----- [作品頁] 上傳與管理區塊樣式 ----- */
+        /* ===== 作品頁 (Works) 樣式 ===== */
         .upload-section {
-            background: #fafafa;
-            border: 1px solid #e2e8f0;
+            background: var(--subcard-bg);
+            border: 1px dashed var(--input-border);
             border-radius: 12px;
             padding: 24px;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
         }
 
         .cover-upload-wrapper {
-            border: 2px dashed #cbd5e0;
+            border: 2px dashed var(--input-border);
             border-radius: 12px;
-            background: #ffffff;
+            background: var(--input-bg);
             cursor: pointer;
-            transition: all 0.3s ease;
             text-align: center;
-            padding: 30px 20px;
-            margin-bottom: 15px;
-            position: relative;
+            padding: 24px 16px;
+            transition: all 0.3s ease;
         }
 
         .cover-upload-wrapper:hover {
-            border-color: #6b46c1;
-            background: #f8fafc;
+            border-color: #8b5cf6;
         }
 
         .cover-upload-input { display: none; }
 
         .upload-icon svg {
-            width: 48px;
-            height: 48px;
-            fill: #6b46c1;
+            width: 42px;
+            height: 42px;
+            fill: #8b5cf6;
         }
 
         .cover-preview {
             display: none;
             width: 100%;
-            max-height: 220px;
+            max-height: 200px;
             object-fit: cover;
             border-radius: 8px;
             margin-top: 10px;
         }
 
-        /* 作品項目列表 Work Items */
+        /* 作品動態列表 */
         .work-item {
-            background: white;
+            background: var(--subcard-bg);
             border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-left: 5px solid #3498db;
+            padding: 18px;
+            margin-bottom: 16px;
+            border-left: 5px solid #3b82f6;
             transition: all 0.3s ease;
         }
 
-        .work-item.private {
-            border-left-color: #e74c3c;
-            background-color: #fff5f5;
-        }
-
-        .work-item.public {
-            border-left-color: #2ecc71;
-            background-color: #f0fdf4;
-        }
+        .work-item.private { border-left-color: #ef4444; }
+        .work-item.public { border-left-color: #22c55e; }
 
         .work-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
             gap: 10px;
         }
 
-        .work-title {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Switch 開關按鈕 */
+        /* Switch 開關 */
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 46px;
-            height: 24px;
+            width: 44px;
+            height: 22px;
         }
 
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
@@ -270,74 +316,110 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
+            background-color: #cbd5e0;
             transition: .3s;
-            border-radius: 24px;
+            border-radius: 22px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 18px; width: 18px;
+            height: 16px; width: 16px;
             left: 3px; bottom: 3px;
             background-color: white;
             transition: .3s;
             border-radius: 50%;
         }
 
-        input:checked + .slider { background-color: #2ecc71; }
+        input:checked + .slider { background-color: #22c55e; }
         input:checked + .slider:before { transform: translateX(22px); }
 
         .status-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 3px 8px;
+            border-radius: 10px;
             font-size: 12px;
             font-weight: 600;
         }
 
-        .status-badge.public { background-color: #d5f5e3; color: #27ae60; }
-        .status-badge.private { background-color: #fadbd8; color: #c0392b; }
+        .status-badge.public { background: #dcfce7; color: #15803d; }
+        .status-badge.private { background: #fee2e2; color: #b91c1c; }
 
-        /* ----- [聯絡頁] 聯絡資訊列表 ----- */
-        .contact-info {
+        /* ===== 聯絡頁 (Contact) 樣式 ===== */
+        .contact-info-list {
             list-style: none;
-            margin-bottom: 25px;
-            padding: 15px;
-            background: #f8fafc;
-            border-radius: 8px;
+            background: var(--subcard-bg);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
         }
 
-        .contact-info li {
-            padding: 8px 0;
-            color: #475569;
+        .contact-info-list li {
+            padding: 6px 0;
             font-size: 15px;
         }
 
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #f1f5f9;
-            font-size: 14px;
+        /* 下滑指示器 Arrow */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: var(--scroll-indicator);
+            text-decoration: none;
+            animation: bounce 2s infinite;
         }
 
-        @media (max-width: 600px) {
-            .page { padding: 20px; }
-            nav a { padding: 8px 12px; font-size: 14px; }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+            40% { transform: translate(-50%, -15px); }
+            60% { transform: translate(-50%, -7px); }
+        }
+
+        /* 返回頂部按鈕 Floating Button */
+        .back-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 900;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .back-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-top:hover {
+            transform: translateY(-4px);
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="#home" id="nav-home" class="active-link" onclick="showPage('home')">首頁</a>
-        <a href="#works" id="nav-works" onclick="showPage('works')">作品集</a>
-        <a href="#contact" id="nav-contact" onclick="showPage('contact')">聯絡我</a>
+        <a href="#home">首頁</a>
+        <a href="#works">作品集</a>
+        <a href="#contact">聯絡我</a>
+        <button id="themeToggle" aria-label="主題切換">
+            <span id="themeIcon">🌙</span>
+            <span id="themeText">Dark</span>
+        </button>
     </nav>
 
-    <div class="container">
-        
-        <section id="home" class="page active">
+    <section id="home" class="page">
+        <div class="card-container">
             <h1>自我介紹</h1>
             <div class="form-group">
                 <label for="homeName">名字：</label>
@@ -345,38 +427,34 @@
             </div>
             <div class="form-group">
                 <label for="homeIntro">自我介紹：</label>
-                <textarea id="homeIntro" rows="4" placeholder="請寫下一段簡單的自我介紹..."></textarea>
+                <textarea id="homeIntro" rows="3" placeholder="請寫下一段簡短的自我介紹..."></textarea>
             </div>
             <button class="btn" onclick="saveHomeIntro()">儲存個人簡介</button>
             <div id="homeMessage" class="message-box"></div>
 
-            <div class="profile-card" id="profileDisplay" style="display: none;">
-                <h2 id="displayName" style="color: #6b46c1; margin-bottom: 8px;"></h2>
-                <p id="displayIntro" style="line-height: 1.6; color: #4a5568;"></p>
+            <div class="profile-display-card" id="profileDisplay" style="display: none;">
+                <h3 id="displayName" style="color: #8b5cf6; margin-bottom: 6px;"></h3>
+                <p id="displayIntro" style="line-height: 1.6; opacity: 0.9;"></p>
             </div>
-        </section>
+        </div>
+        <a href="#works" class="scroll-indicator">↓</a>
+    </section>
 
-        <section id="works" class="page">
-            <h1>作品集管理</h1>
+    <section id="works" class="page">
+        <div class="card-container">
+            <h1>我的作品專案</h1>
 
             <div class="upload-section">
-                <h3 style="margin-bottom: 15px; color: #4a5568;">新增專案作品</h3>
-                
+                <h3 style="margin-bottom: 12px;">新增作品專案</h3>
                 <div class="form-group">
-                    <label>作品封面上傳</label>
+                    <label>作品封面圖片</label>
                     <div class="cover-upload-wrapper" id="uploadWrapper">
                         <input type="file" id="coverInput" class="cover-upload-input" accept="image/*">
-                        <div class="upload-placeholder" id="uploadPlaceholder">
+                        <div id="uploadPlaceholder">
                             <div class="upload-icon">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                                    <polyline points="7,10 12,15 17,10"/>
-                                    <line x1="12" y1="15" x2="12" y2="3"/>
-                                </svg>
+                                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                             </div>
-                            <p style="color: #64748b; font-size: 14px; margin-top: 8px;">
-                                點擊上傳封面圖片 (PNG, JPG, 5MB 以內)
-                            </p>
+                            <p style="font-size: 13px; opacity: 0.8; margin-top: 6px;">點擊選擇圖片檔 (PNG, JPG < 5MB)</p>
                         </div>
                         <img src="" alt="封面預覽" class="cover-preview" id="coverPreview">
                     </div>
@@ -384,30 +462,32 @@
 
                 <div class="form-group">
                     <label for="projectName">作品名稱</label>
-                    <input type="text" id="projectName" placeholder="請輸入作品名稱">
+                    <input type="text" id="projectName" placeholder="例如：響應式電商網站設計">
                 </div>
 
                 <div class="form-group">
-                    <label for="projectDesc">作品詳細描述</label>
-                    <textarea id="projectDesc" rows="3" placeholder="請簡單介紹該專案或作品..."></textarea>
+                    <label for="projectDesc">作品描述</label>
+                    <textarea id="projectDesc" rows="2" placeholder="請簡述專案亮點與技術棧..."></textarea>
                 </div>
 
-                <button class="btn" id="uploadSubmitBtn" disabled>上傳並新增作品</button>
+                <button class="btn" id="uploadSubmitBtn" disabled>發布作品</button>
                 <div id="uploadSuccessMsg" class="message-box"></div>
             </div>
 
-            <h3 style="margin-bottom: 15px; color: #4a5568;">已發布專案</h3>
-            <div id="portfolio-container">
-                </div>
-        </section>
+            <h3 style="margin-bottom: 12px;">已發布作品清單</h3>
+            <div id="portfolio-container"></div>
+        </div>
+        <a href="#contact" class="scroll-indicator">↓</a>
+    </section>
 
-        <section id="contact" class="page">
+    <section id="contact" class="page">
+        <div class="card-container">
             <h1>聯絡我</h1>
-            <p style="text-align: center; color: #64748b; margin-bottom: 20px;">
-                如果有任何合作建議或疑問，歡迎隨時與我聯繫！
+            <p style="text-align: center; margin-bottom: 20px; opacity: 0.8;">
+                如果有任何合作建議，歡迎隨時透過下方表單聯絡！
             </p>
 
-            <ul class="contact-info">
+            <ul class="contact-info-list">
                 <li>📧 <strong>Email:</strong> your@email.com</li>
                 <li>🐙 <strong>GitHub:</strong> @yourusername</li>
                 <li>💬 <strong>WeChat/Line:</strong> your-contact-id</li>
@@ -426,39 +506,50 @@
 
                 <div class="form-group">
                     <label for="contactMessage">留言內容</label>
-                    <textarea id="contactMessage" rows="4" placeholder="請輸入您的訊息內容..."></textarea>
+                    <textarea id="contactMessage" rows="3" placeholder="請輸入您的訊息..."></textarea>
                 </div>
 
                 <button type="submit" class="btn">送出訊息</button>
             </form>
-
             <div id="contactFormResult" class="message-box"></div>
-        </section>
+        </div>
+    </section>
 
-    </div>
-
-    <div class="footer">
-        <p>© 2026 個人作品集網站 All Rights Reserved.</p>
-    </div>
+    <button id="backToTop" class="back-top" aria-label="返回頂部">↑</button>
 
     <script>
-        // ================= 1. SPA 頁面切換控制 =================
-        function showPage(pageId) {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => page.classList.remove('active'));
+        // ================= 1. 深淺色主題切換 (Theme Toggle) =================
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const html = document.documentElement;
 
-            const activePage = document.getElementById(pageId);
-            if(activePage) activePage.classList.add('active');
-
-            // 更新導覽列樣式
-            const navLinks = document.querySelectorAll('nav a');
-            navLinks.forEach(link => link.classList.remove('active-link'));
-            
-            const activeNav = document.getElementById(`nav-${pageId}`);
-            if(activeNav) activeNav.classList.add('active-link');
+        function getInitialTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved) return saved;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
 
-        // ================= 2. 首頁自我介紹邏輯 =================
+        function applyTheme(theme) {
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            if (theme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark';
+            }
+        }
+
+        applyTheme(getInitialTheme());
+
+        themeToggle.addEventListener('click', () => {
+            const current = html.getAttribute('data-theme');
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        // ================= 2. 首頁自我介紹 (Profile Persistence) =================
         function saveHomeIntro() {
             const name = document.getElementById('homeName').value.trim();
             const intro = document.getElementById('homeIntro').value.trim();
@@ -466,58 +557,53 @@
 
             if (name && intro) {
                 msgBox.className = 'message-box success';
-                msgBox.textContent = '個人簡介已成功儲存！';
-
-                // 顯示儲存卡片
+                msgBox.textContent = '個人簡介已成功更新！';
+                
                 document.getElementById('displayName').textContent = name;
                 document.getElementById('displayIntro').textContent = intro;
                 document.getElementById('profileDisplay').style.display = 'block';
 
-                // 寫入 LocalStorage
                 localStorage.setItem('userProfile', JSON.stringify({ name, intro }));
             } else {
                 msgBox.className = 'message-box error';
-                msgBox.textContent = '請填寫完姓名與自我介紹';
+                msgBox.textContent = '請完整填寫姓名與自我介紹';
             }
         }
 
-        // 載入預存個人簡介
         function loadHomeIntro() {
-            const savedProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
-            if (savedProfile.name && savedProfile.intro) {
-                document.getElementById('homeName').value = savedProfile.name;
-                document.getElementById('homeIntro').value = savedProfile.intro;
-                document.getElementById('displayName').textContent = savedProfile.name;
-                document.getElementById('displayIntro').textContent = savedProfile.intro;
+            const saved = JSON.parse(localStorage.getItem('userProfile') || '{}');
+            if (saved.name && saved.intro) {
+                document.getElementById('homeName').value = saved.name;
+                document.getElementById('homeIntro').value = saved.intro;
+                document.getElementById('displayName').textContent = saved.name;
+                document.getElementById('displayIntro').textContent = saved.intro;
                 document.getElementById('profileDisplay').style.display = 'block';
             }
         }
 
-        // ================= 3. 作品列表動態渲染與隱私開關 =================
+        // ================= 3. 作品列表與公開/私密切換 =================
         function initPortfolio() {
             const container = document.getElementById('portfolio-container');
-            container.innerHTML = ''; // 清空
-
+            container.innerHTML = '';
             for (let i = 1; i <= 3; i++) {
-                const workItem = createWorkItem(i);
-                container.appendChild(workItem);
+                container.appendChild(createWorkItem(i));
             }
             loadWorkStates();
         }
 
         function createWorkItem(index) {
-            const workItem = document.createElement('div');
-            workItem.className = 'work-item';
-            workItem.dataset.index = index;
+            const item = document.createElement('div');
+            item.className = 'work-item';
+            item.dataset.index = index;
 
-            workItem.innerHTML = `
+            item.innerHTML = `
                 <div class="work-header">
-                    <div class="work-title">
-                        <label style="font-size:12px; color:#64748b;">專案 #${index}</label>
-                        <input type="text" id="work-title-${index}" value="專案展示作品 ${index}">
+                    <div>
+                        <span style="font-size:12px; opacity:0.7;">專案 #${index}</span>
+                        <h4 style="margin-top:2px;">範例作品 ${index}</h4>
                     </div>
-                    <div class="toggle-container">
-                        <span style="font-size:14px; font-weight:600;">公開:</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:13px; font-weight:600;">公開：</span>
                         <label class="toggle-switch">
                             <input type="checkbox" id="toggle-${index}">
                             <span class="slider"></span>
@@ -525,23 +611,19 @@
                         <span class="status-badge" id="status-${index}">私密</span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <textarea id="work-desc-${index}" rows="2" placeholder="作品詳細描述...">專案展示 ${index} 的說明內容，此部分皆支援自動儲存狀態。</textarea>
-                </div>
+                <p style="font-size:14px; opacity:0.85;">這是範例作品 ${index} 的說明範例，支援即時隱私切換與狀態保存。</p>
             `;
 
-            // 綁定切換事件
-            const toggle = workItem.querySelector(`#toggle-${index}`);
-            toggle.addEventListener('change', function () {
+            item.querySelector(`#toggle-${index}`).addEventListener('change', function() {
                 updateWorkStatus(index, this.checked);
             });
 
-            return workItem;
+            return item;
         }
 
         function updateWorkStatus(index, isPublic) {
             const statusBadge = document.getElementById(`status-${index}`);
-            const workItem = document.querySelector(`.work-item[data-index="${index}"]`);
+            const item = document.querySelector(`.work-item[data-index="${index}"]`);
             const toggle = document.getElementById(`toggle-${index}`);
 
             if (toggle) toggle.checked = isPublic;
@@ -549,14 +631,13 @@
             if (isPublic) {
                 statusBadge.textContent = '公開';
                 statusBadge.className = 'status-badge public';
-                workItem.className = 'work-item public';
+                item.className = 'work-item public';
             } else {
                 statusBadge.textContent = '私密';
                 statusBadge.className = 'status-badge private';
-                workItem.className = 'work-item private';
+                item.className = 'work-item private';
             }
 
-            // 寫入 LocalStorage
             const workStates = JSON.parse(localStorage.getItem('workStates') || '{}');
             workStates[index] = isPublic;
             localStorage.setItem('workStates', JSON.stringify(workStates));
@@ -564,13 +645,13 @@
 
         function loadWorkStates() {
             const workStates = JSON.parse(localStorage.getItem('workStates') || '{}');
-            for (let index = 1; index <= 3; index++) {
-                const isPublic = workStates[index] !== undefined ? workStates[index] : false;
-                updateWorkStatus(index, isPublic);
+            for (let i = 1; i <= 3; i++) {
+                const isPublic = workStates[i] !== undefined ? workStates[i] : false;
+                updateWorkStatus(i, isPublic);
             }
         }
 
-        // ================= 4. 圖文作品上傳預覽與驗證 =================
+        // ================= 4. 圖文作品上傳驗證與預覽 =================
         const coverInput = document.getElementById('coverInput');
         const uploadWrapper = document.getElementById('uploadWrapper');
         const coverPreview = document.getElementById('coverPreview');
@@ -580,20 +661,18 @@
         const uploadSubmitBtn = document.getElementById('uploadSubmitBtn');
         const uploadSuccessMsg = document.getElementById('uploadSuccessMsg');
 
-        // 上傳框點擊
         uploadWrapper.addEventListener('click', () => coverInput.click());
 
-        // 圖片讀取預覽
         coverInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 if (file.size > 5 * 1024 * 1024) {
-                    alert('圖片檔案大小不能超過 5MB');
+                    alert('圖片不可超過 5MB');
                     coverInput.value = '';
                     return;
                 }
                 if (!file.type.startsWith('image/')) {
-                    alert('請選擇有效的圖片格式');
+                    alert('請選擇圖片檔案');
                     coverInput.value = '';
                     return;
                 }
@@ -609,7 +688,6 @@
             }
         });
 
-        // 即時驗證上傳表單
         function checkUploadValidity() {
             const hasFile = coverInput.files.length > 0;
             const hasName = projectName.value.trim().length > 0;
@@ -620,15 +698,14 @@
         projectName.addEventListener('input', checkUploadValidity);
         projectDesc.addEventListener('input', checkUploadValidity);
 
-        // 提交新增作品
         uploadSubmitBtn.addEventListener('click', function() {
-            uploadSubmitBtn.textContent = '上傳中...';
+            uploadSubmitBtn.textContent = '發布中...';
             uploadSubmitBtn.disabled = true;
 
             setTimeout(() => {
-                uploadSubmitBtn.textContent = '上傳並新增作品';
+                uploadSubmitBtn.textContent = '發布作品';
                 uploadSuccessMsg.className = 'message-box success';
-                uploadSuccessMsg.textContent = '專案成功上傳並發布！';
+                uploadSuccessMsg.textContent = '專案成功發布！';
 
                 setTimeout(() => {
                     uploadSuccessMsg.className = 'message-box';
@@ -639,47 +716,49 @@
                     projectName.value = '';
                     projectDesc.value = '';
                     uploadSubmitBtn.disabled = true;
-                }, 2500);
-            }, 1200);
+                }, 2000);
+            }, 1000);
         });
 
         // ================= 5. 聯絡表單驗證 =================
         document.getElementById('contactForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
             const name = document.getElementById('contactName').value.trim();
             const email = document.getElementById('contactEmail').value.trim();
             const message = document.getElementById('contactMessage').value.trim();
-            const resultDiv = document.getElementById('contactFormResult');
+            const result = document.getElementById('contactFormResult');
 
-            if (!name) {
-                showContactResult('請填寫姓名', 'error');
-                return;
-            }
+            if (!name) return showContactMsg('請輸入姓名', 'error');
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showContactMsg('請輸入正確的 Email 格式', 'error');
+            if (!message) return showContactMsg('請輸入留言內容', 'error');
 
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(email)) {
-                showContactResult('請填寫正確的 Email 格式', 'error');
-                return;
-            }
-
-            if (!message) {
-                showContactResult('請填寫留言內容', 'error');
-                return;
-            }
-
-            showContactResult('訊息已成功送出，感謝您的聯繫！', 'success');
+            showContactMsg('感謝您的留言，我會盡快回覆！', 'success');
             e.target.reset();
         });
 
-        function showContactResult(msg, type) {
-            const div = document.getElementById('contactFormResult');
-            div.textContent = msg;
-            div.className = `message-box ${type}`;
+        function showContactMsg(msg, type) {
+            const res = document.getElementById('contactFormResult');
+            res.textContent = msg;
+            res.className = `message-box ${type}`;
         }
 
-        // ================= 頁面初始化 =================
-        document.addEventListener('DOMContentLoaded', function() {
+        // ================= 6. 返回頂部按鈕 (Back to Top) =================
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            document.getElementById('home').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
             loadHomeIntro();
             initPortfolio();
         });
